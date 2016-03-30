@@ -9,28 +9,49 @@
 import XCTest
 @testable import Reflection
 
-class ReflectionTests: XCTestCase {
-    
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+enum ReflectionTestEnum
+{
+    case One, Two
+}
+
+class ReflectionTests: XCTestCase
+{
+    func test_typeName_base_types()
+    {
+        XCTAssertEqual(typeName(String), "String")
+        XCTAssertEqual(typeName(Int), "Int")
+        XCTAssertEqual(typeName(Float), "Float")
+        XCTAssertEqual(typeName(Double), "Double")
+        XCTAssertEqual(typeName([String]), "Array<String>")
     }
     
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
+    func test_typeName_custom_types()
+    {
+        XCTAssertEqual(typeName(NSObject), "NSObject")
+        XCTAssertEqual(typeName(ReflectionTests), "ReflectionTests")
+        XCTAssertEqual(typeName(ReflectionTestEnum), "ReflectionTestEnum")
+        XCTAssertEqual(typeName(CGPoint), "CGPoint")
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    func test_typeName_base_values()
+    {
+        XCTAssertEqual(typeName("s"), "String")
+        XCTAssertEqual(typeName(1), "Int")
+        XCTAssertEqual(typeName(Float(1)), "Float")
+        XCTAssertEqual(typeName(0.33), "Double")
+        XCTAssertEqual(typeName(Double(0.5)), "Double")
+        XCTAssertEqual(typeName(["s"]), "Array<String>")
     }
+
+    typealias Func = ()->()
     
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock {
-            // Put the code you want to measure the time of here.
-        }
+    func test_typeName_custom_values()
+    {
+        XCTAssertEqual(typeName(NSObject()), "NSObject")
+        XCTAssertEqual(typeName(CGPoint(x: 0, y: 1)), "CGPoint")
+        XCTAssertEqual(typeName(self), "ReflectionTests")
+        XCTAssertEqual(typeName(Func), "() -> ()")
+        XCTAssertEqual(typeName(ReflectionTestEnum.Two), "ReflectionTestEnum")
     }
-    
+
 }
